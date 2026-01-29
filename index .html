@@ -255,10 +255,16 @@ input{
  <br><br>
  <center>© 2024 InvestWin.All rigths reserved – 21+</center>
 </section>
-
 <section id="depot" class="tab">
- <input id="amount" placeholder="Montant XAF">
- <button class="action" onclick="depot()">Déposer<i class="fa-solid fa-wallet"></i></button>
+ <input
+  id="amount"
+  type="number"
+  min="150"
+  placeholder="Montant XAF"
+ >
+ <button class="action" onclick="depot()">
+  <i class="fa-solid fa-wallet"></i> Déposer
+ </button>
 </section>
 
 <section id="retire" class="tab">
@@ -403,7 +409,59 @@ window.buyPlan = async (prix, gainPlan) => {
  startCountdown(endAt);
 };
 /* ===== DEPOT / RETRAIT ===== */
-window.depot=()=>alert("Intégrer NotchPay ici");
+window.depot = async () => {
+ const montantInput = document.getElementById("amount");
+ if(!montantInput) return alert("Champ montant introuvable");
+
+ const amount = Number(montantInput.value);
+
+ if(isNaN(amount) || amount < 150)
+  return alert("Montant minimum 150 XAF");
+
+ if(!auth.currentUser)
+  return alert("Connecte-toi");
+
+ const uid = auth.currentUser.uid;
+
+ try{
+  const reference = `dep_${uid}_${Date.now()}`;
+
+  const res = await fetch("https://api.notchpay.co/payments",{
+   method:"POST",
+   headers:{
+    "Authorization":"pk.azYHHFMqVKLHlDNxzCbiqKlOfDh9oULJ6HQ52MPqgytU7dHwoODNkxKvV1xBECeeHxTBZ0Og31aCrJ11nDGI7iNtBcXD42ctowdIDyFbGG6KEeoiXCOjZJy5yg2PW",
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({
+    amount: amount,
+    currency: "XAF",
+    description: "Recharge du solde",
+    reference: reference,
+    customer:{
+     email: auth.currentUser.email,
+     name: auth.currentUser.displayName || "Utilisateur"
+    },
+    metadata:{
+     uid: uid,
+     type: "deposit"
+    },
+    callback: "https://mboaskill.cm"
+   })
+  });
+
+  const data = await res.json();
+
+  if(data?.authorization_url){
+   window.location.href = data.authorization_url;
+  }else{
+   alert("Impossible de lancer le paiement");
+  }
+
+ }catch(e){
+  console.error(e);
+  alert("Erreur lors du paiement");
+ }
+};
 
 window.withdraw = async () => {
  if(!uid) return alert("Connecte-toi");
