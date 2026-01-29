@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>InvestWin - Sportybet Cameroon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:system-ui;
+ background:#0f172a;
+ color:white;
+ padding:15px;
+}
+
+nav{
+ display:flex;
+ gap:10px;
+ margin-bottom:15px;
+}
+
+nav button{
+ flex:1;
+ border:none;
+ padding:12px;
+ border-radius:10px;
+ background:#1e293b;
+ color:white;
+ cursor:pointer;
+ opacity:.6;
+}
+
+nav button.activeBtn{
+ opacity:1;
+ background:#22c55e;
+ color:black;
+}
+
+.tab{display:none}
+.tab.active{display:block}
+
+.top{
+ background:linear-gradient(135deg,#FF0000,#22c55e);
+ border-radius:20px;
+ padding:20px;
+ margin-bottom:15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.tap{
+ background:linear-gradient(45deg,#FF0000,#FF0000);
+ border-radius:20px;
+ padding:20px;
+ margin:15px 0;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ cursor:pointer;
+}
+
+.balance{
+ display:flex;
+ gap:25px;
+}
+
+.balance span{
+ display:block;
+ font-size:22px;
+ font-weight:bold;
+}
+
+.plus{
+ background:white;
+ color:black;
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:22px;
+ cursor:pointer;
+}
+
+.plan{
+ background:linear-gradient(135deg,#FF0000,#22c55e);
+ border-radius:20px;
+ padding:15px;
+ margin-bottom:12px;
+ position: relative;
+}
+
+.plan h3{font-size:26px}
+.plan p{opacity:.8;margin:5px 0}
+
+.plan button{
+ margin-top:10px;
+ width:100%;
+ padding:10px;
+ border:none;
+ border-radius:10px;
+ background:#22c55e;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.plan-img{
+ position:absolute;
+ top:50%;
+ right:15px;
+ width:70px;
+ height:70px;
+ transform:translateY(-50%);
+ opacity:0.8;
+ pointer-events:none;
+}
+
+.plan-img img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ border-radius:12px;
+}
+input{
+ width:100%;
+ padding:12px;
+ border-radius:10px;
+ border:none;
+ margin-bottom:10px;
+}
+
+.action{
+ width:100%;
+ padding:12px;
+ border-radius:12px;
+ border:none;
+ background:linear-gradient(135deg,#22c55e,#FF0000);
+ color:white;
+ cursor:pointer;
+}
+#userBox{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+#userPhoto{
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ object-fit:cover;
+}
+.withdraw-card{
+ background:gold;
+ border-radius:12px;
+ padding:12px;
+ margin-bottom:10px;
+ font-size:14px;
+ box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.withdraw-card.new{
+ border-left:6px solid #22c55e;
+}
+
+.withdraw-card.old{
+ border-left:6px solid #ef4444;
+ opacity:.85;
+}
+
+.withdraw-card b{
+ display:block;
+ margin-bottom:4px;
+}
+
+.withdraw-card .status{
+ font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+ <button class="activeBtn" onclick="openTab('home',this)">Accueil<i class="fa fa-home"></i></button>
+ <button onclick="openTab('depot',this)">Dépôt<i class="fa-solid fa-wallet"></i></button>
+ <button onclick="openTab('retire',this)">Retirer<i class="fa-solid fa-coins"></i></button>
+</nav>
+
+<section id="home" class="tab active">
+ <div class="top">
+  <div class="balance">
+   <div>Solde<span id="solde">0</span>XAF</div>
+   <div>Gains<span id="gain">0</span>XAF</div>
+  </div>
+  <div class="plus" onclick="openTab('depot',document.querySelectorAll('nav button')[1])">+</div>
+ </div>
+  <p id="userEmail" style="text-align:center;margin:10px"></p>
+<div id="userBox">
+ <img id="userPhoto" src="" alt="profile">
+ <div>
+  <p id="userName"></p>
+  <small id="userEmail"></small>
+ </div>
+</div>
+<button onclick="openTab('withdrawHistory',this)">Historique</button>
+<h1 id="timer" style="text-align:center;margin:10px;color:#22c55e"></h1>
+ <div class="plan">
+  <h3>12 000 F</h3>
+  <p>Durée : 5 jours</p>
+  <p>Gains : 22 500 F</p>
+  <div class="plan-img">
+ <img src="https://mqm8fffqk9.ucarecd.net/e27fc6d9-ee98-4456-ae98-2b72d748029c/-/preview/200x200/">
+</div>
+  <button onclick="buyPlan(12000,22500)">Acheter<i class="fa-solid fa-cart-shopping"></i></button>
+ </div>
+
+ <div class="plan">
+  <h3>25 000 F</h3>
+  <p>Durée : 5 jours</p>
+  <p>Gains : 45 000 F</p>
+    <div class="plan-img">
+ <img src="https://mqm8fffqk9.ucarecd.net/7b195e49-cb9d-45a9-89c1-9719e79276e8/-/preview/225x225/">
+</div>
+
+  <button onclick="buyPlan(25000,45000)">Acheter<i class="fa-solid fa-cart-shopping"></i></button>
+ </div>
+
+ <div class="plan">
+  <h3>35 000 F</h3>
+  <p>Durée : 5 jours</p>
+  <p>Gains : 65 000 F</p>
+    <div class="plan-img">
+ <img src="https://mqm8fffqk9.ucarecd.net/db169ade-7a39-4a0e-a5a7-39f72cfd9974/-/preview/224x224/">
+</div>
+
+  <button onclick="buyPlan(35000,65000)">Acheter<i class="fa-solid fa-cart-shopping"></i></button>
+ </div>
+
+ <div class="tap" onclick="window.open('https://www.sportybet.co.cm')">
+  <h2>Sportybet.co.cm</h2>
+ </div>
+
+ <button class="action" onclick="googleLogin()">Connexion Google<i class="fa-brands fa-google"></i></button>
+ <button class="action" onclick="logout()">Déconnexion<i class="fa-solid fa-right-from-bracket"></i></button>
+
+ <br><br>
+ <center>© 2024 InvestWin.All rigths reserved – 21+</center>
+</section>
+
+<section id="depot" class="tab">
+ <input id="amount" placeholder="Montant XAF">
+ <button class="action" onclick="depot()">Déposer<i class="fa-solid fa-wallet"></i></button>
+</section>
+
+<section id="retire" class="tab">
+ <input
+  id="withdrawAmount"
+  type="number"
+  min="100"
+  placeholder="Montant XAF"
+ >
+
+ <input
+  id="withdrawNumber"
+  type="tel"
+  placeholder="Numéro ex +237..."
+ >
+
+ <button class="action" onclick="withdraw()">
+  <i class="fa-solid fa-coins"></i> Retirer
+ </button>
+</section>
+<section id="withdrawHistory" class="tab">
+ <h3>Historique des retraits</h3>
+ <div id="withdrawList"></div>
+</section>
+<script type="module">
+/* ===== TABS ===== */
+window.openTab=(id,btn)=>{
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("activeBtn"));
+ if(btn) btn.classList.add("activeBtn");
+};
+
+/* ===== FIREBASE ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+ getAuth,
+ GoogleAuthProvider,
+ signInWithPopup,
+ signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+ getFirestore,
+ doc,
+ getDoc,
+ setDoc,
+ updateDoc,
+ addDoc,
+ collection,
+ serverTimestamp,
+ query,
+ where,
+ orderBy,
+ getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyD10d97_QuiLfJmI1idBXIDNMG8flz71B4",
+ authDomain:"winbet-e597a.firebaseapp.com",
+ projectId:"winbet-e597a",
+ storageBucket:"winbet-e597a.appspot.com",
+ messagingSenderId:"630506550714",
+ appId:"1:630506550714:web:7d780813e384b3b57e1983"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
+
+let uid=null;
+
+/* ===== LOGIN ===== */
+window.googleLogin = async () => {
+ const r = await signInWithPopup(auth, provider);
+
+ uid = r.user.uid;
+
+ userEmail.innerText = r.user.email;
+ userName.innerText = r.user.displayName;
+ userPhoto.src = r.user.photoURL;
+
+ const ref = doc(db,"users",uid);
+ const snap = await getDoc(ref);
+
+ if(!snap.exists()){
+  await setDoc(ref,{
+   solde: 0,
+   gain: 0,
+   name: r.user.displayName,
+   email: r.user.email,
+   photo: r.user.photoURL
+  });
+ }
+
+ loadUser();
+checkActivePlan();
+loadWithdrawHistory();
+};
+async function loadUser(){
+ const d=(await getDoc(doc(db,"users",uid))).data();
+ solde.innerText=d.solde;
+ gain.innerText=d.gain;
+}
+
+/* ===== PLANS ===== */
+window.buyPlan = async (prix, gainPlan) => {
+ if(!uid) return alert("Connecte-toi d'abord");
+
+ const userRef = doc(db,"users",uid);
+ const userSnap = await getDoc(userRef);
+ const user = userSnap.data();
+
+ if(user.solde < prix) return alert("Solde insuffisant");
+
+ const planRef = doc(db,"plans",uid);
+ const planSnap = await getDoc(planRef);
+
+ if(planSnap.exists() && planSnap.data().status === "active"){
+  return alert("Un plan est déjà en cours");
+ }
+
+ const startAt = Date.now();
+ const endAt = startAt + (5 * 24 * 60 * 60 * 1000); // 5 jours
+
+ // couper le solde
+ await updateDoc(userRef,{
+  solde: user.solde - prix
+ });
+
+ // créer le plan
+ await setDoc(planRef,{
+  prix: prix,
+  gain: gainPlan,
+  startAt: startAt,
+  endAt: endAt,
+  status: "active"
+ });
+
+ alert("Plan activé");
+ startCountdown(endAt);
+};
+/* ===== DEPOT / RETRAIT ===== */
+window.depot=()=>alert("Intégrer NotchPay ici");
+
+window.withdraw = async () => {
+ if(!uid) return alert("Connecte-toi");
+
+ const amt = Number(withdrawAmount.value);
+ const number = withdrawNumber.value.trim();
+
+ if(!amt || amt <= 0) return alert("Montant invalide");
+ if(!number) return alert("Numéro requis");
+
+ const ref = doc(db,"users",uid);
+ const snap = await getDoc(ref);
+ const d = snap.data();
+
+ if(d.gain < amt) return alert("Gain insuffisant");
+
+ // 1️⃣ Enregistrer la demande de retrait
+ await addDoc(collection(db,"retraits"),{
+  uid: uid,
+  montant: amt,
+  numero: number,
+  status: "pending",
+  createdAt: serverTimestamp()
+ });
+
+ // 2️⃣ Déduire du gain
+ await updateDoc(ref,{
+  gain: d.gain - amt
+ });
+
+ withdrawAmount.value="";
+ withdrawNumber.value="";
+ loadUser();
+ alert("Retrait envoyé avec succès");
+};
+/* ===== LOGOUT ===== */
+window.logout=()=>{
+ signOut(auth);
+ location.reload();
+};
+
+let timerInterval;
+
+function startCountdown(endAt){
+ clearInterval(timerInterval);
+
+ timerInterval = setInterval(async ()=>{
+  const diff = endAt - Date.now();
+
+  if(diff <= 0){
+   clearInterval(timerInterval);
+   timer.innerText = "Plan terminé";
+   await finishPlan();
+   return;
+  }
+
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / (1000*60*60)) % 24);
+  const m = Math.floor((diff / (1000*60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  timer.innerText = `${d}j ${h}h ${m}m ${s}s`;
+ },1000);
+}
+
+async function finishPlan(){
+ const planRef = doc(db,"plans",uid);
+ const planSnap = await getDoc(planRef);
+
+ if(!planSnap.exists()) return;
+
+ const plan = planSnap.data();
+ if(plan.status !== "active") return;
+
+ const userRef = doc(db,"users",uid);
+ const userSnap = await getDoc(userRef);
+ const user = userSnap.data();
+
+ // ajouter le gain
+ await updateDoc(userRef,{
+  gain: user.gain + plan.gain
+ });
+
+ // clôturer le plan
+ await updateDoc(planRef,{
+  status: "completed"
+ });
+
+ alert("Plan terminé 🎉 Gain ajouté");
+ loadUser();
+}
+
+async function checkActivePlan(){
+ const planRef = doc(db,"plans",uid);
+ const snap = await getDoc(planRef);
+
+ if(snap.exists() && snap.data().status === "active"){
+  startCountdown(snap.data().endAt);
+ }
+}
+async function loadWithdrawHistory(){
+ if(!uid) return;
+
+ withdrawList.innerHTML = "Chargement...";
+
+ const q = query(
+  collection(db,"retraits"),
+  where("uid","==",uid),
+  orderBy("createdAt","desc")
+ );
+
+ const snap = await getDocs(q);
+ withdrawList.innerHTML = "";
+
+ const now = Date.now();
+
+ snap.forEach(docSnap=>{
+  const d = docSnap.data();
+  const time = d.createdAt?.toMillis() || 0;
+  const age = now - time;
+
+  // récent = moins de 24h
+  const isNew = age < (24 * 60 * 60 * 1000);
+
+  withdrawList.innerHTML += `
+   <div class="withdraw-card ${isNew ? "new" : "old"}">
+    <b>Statut :</b> <span class="status">${d.status}</span><br>
+    <b>Montant du retrait :</b> FCFA ${d.montant}<br>
+    <b>Numéro :</b> ${d.numero || "-"}<br>
+    <b>Date :</b> ${new Date(time).toLocaleString()}
+   </div>
+  `;
+ });
+
+ if(!snap.size){
+  withdrawList.innerHTML = "<p>Aucune demande de retrait</p>";
+ }
+}
+</script>
+</body>
+</html>
